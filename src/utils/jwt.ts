@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Response } from 'express'
 
 type UserType = {
@@ -15,6 +15,18 @@ export const createJWT = (payload: UserType) => {
   return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_LIFETIME,
   })
+}
+
+export const isTokenValid = (token: string) => {
+  if (!process.env.JWT_SECRET_KEY) {
+    throw new Error('No env keys provided in development or production')
+  }
+
+  return jwt.verify(token, process.env.JWT_SECRET_KEY) as JwtPayload & {
+    name: string
+    role: string
+    userId: string
+  }
 }
 
 export const attachCookiesToResponse = (user: UserType, res: Response) => {

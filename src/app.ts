@@ -3,12 +3,13 @@ import express, { Application, Request, Response, NextFunction } from 'express'
 import 'express-async-errors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import cookieParser from 'cookie-parser'
 
 import errorHandlerMiddleWare from './middleware/error-handler'
 import notFound from './middleware/not-found'
 import connectDB from './db/connectDB'
 import AuthRouter from './routes/AuthRoute'
-import cookieParser from 'cookie-parser'
+import UserRouter from './routes/UserRoute'
 
 dotenv.config()
 
@@ -29,6 +30,7 @@ app.get('/api/v1', (req, res) => {
 })
 
 app.use('/api/v1/auth', AuthRouter)
+app.use('/api/v1/user', UserRouter)
 
 app.use(notFound)
 app.use(errorHandlerMiddleWare)

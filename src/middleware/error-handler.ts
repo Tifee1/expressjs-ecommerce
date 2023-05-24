@@ -26,7 +26,7 @@ const errorHandlerMiddleWare = async (
     customError.statusCode = StatusCodes.BAD_REQUEST
   }
   if (err.name === 'CastError') {
-    customError.msg = `No job with id ${err.value}`
+    customError.msg = `No user with id ${err.value}`
     customError.statusCode = StatusCodes.NOT_FOUND
   }
 

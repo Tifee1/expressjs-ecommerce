@@ -21,6 +21,7 @@ const UserSchema = new Schema<UserSchemaType & Document>({
   email: {
     type: String,
     required: [true, 'Please enter a valid email'],
+    unique: true,
     validate: {
       validator: (value: string) => validator.isEmail(value),
       message: 'Please provide a valid email',

@@ -1,4 +1,4 @@
-import { createJWT, attachCookiesToResponse } from './jwt'
+import { createJWT, attachCookiesToResponse, isTokenValid } from './jwt'
 import createTokenUser from './tokenUser'
 
-export { createJWT, attachCookiesToResponse, createTokenUser }
+export { createJWT, attachCookiesToResponse, createTokenUser, isTokenValid }
