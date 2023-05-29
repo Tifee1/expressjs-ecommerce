@@ -6,13 +6,22 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import expressFileUpload from 'express-fileupload'
 
+import helmet from 'helmet'
+import rateLimiter from 'express-rate-limit'
+import cors from 'cors'
+import xss from 'xss-clean'
+import mongoSanitize from 'express-mongo-sanitize'
+
 import errorHandlerMiddleWare from './middleware/error-handler'
 import notFound from './middleware/not-found'
 import connectDB from './db/connectDB'
+
+// Routers
 import AuthRouter from './routes/AuthRoute'
 import UserRouter from './routes/UserRoute'
 import ProductRouter from './routes/ProductRoute'
 import ReviewRouter from './routes/ReviewRoute'
+import OrderRouter from './routes/OrderRoute'
 
 dotenv.config()
 
@@ -24,6 +33,19 @@ const port = process.env.PORT || 5000
 app.use(express.static(path.resolve(__dirname, '../client')))
 
 app.use(morgan('tiny'))
+
+app.set('trust proxy', 1)
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+  })
+)
+app.use(helmet())
+app.use(cors())
+app.use(xss())
+app.use(mongoSanitize())
+
 app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET_KEY))
 app.use(expressFileUpload())
@@ -37,6 +59,7 @@ app.use('/api/v1/auth', AuthRouter)
 app.use('/api/v1/user', UserRouter)
 app.use('/api/v1/product', ProductRouter)
 app.use('/api/v1/review', ReviewRouter)
+app.use('/api/v1/order', OrderRouter)
 
 app.use(notFound)
 app.use(errorHandlerMiddleWare)
