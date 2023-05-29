@@ -8,7 +8,7 @@ const checkPermission = (
     role: string
     userId: string
   },
-  resourceId: Types.ObjectId
+  resourceId: any
 ) => {
   if (reqUser.role === 'admin') return
   if (reqUser.userId === resourceId.toString()) return

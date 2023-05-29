@@ -1,4 +1,4 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Model, Schema, Document } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 
@@ -7,10 +7,15 @@ export type UserSchemaType = {
   password: string
   email: string
   role: string
-  comparePassword: (password2: string) => boolean
 }
 
-const UserSchema = new Schema<UserSchemaType & Document>({
+type UserSchemaMethods = {
+  comparePassword: (password2: string) => Promise<boolean>
+}
+
+type UserModel = Model<UserSchemaType, {}, UserSchemaMethods>
+
+const UserSchema = new Schema<UserSchemaType, UserModel, UserSchemaMethods>({
   name: {
     type: String,
     required: [true, 'Please enter a valid name'],
@@ -49,4 +54,4 @@ UserSchema.methods.comparePassword = async function (password2: string) {
   return await bcrypt.compare(password2, this.password)
 }
 
-export default model('User', UserSchema)
+export default model<UserSchemaType, UserModel>('User', UserSchema)
